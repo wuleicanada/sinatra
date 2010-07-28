@@ -588,7 +588,7 @@ module Sinatra
         end
       when res.respond_to?(:each)
         @response.body = res
-      when (100...599) === res
+      when (100..599) === res
         @response.status = res
       end
 
