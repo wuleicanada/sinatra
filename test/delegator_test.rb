@@ -71,6 +71,19 @@ class DelegatorTest < Test::Unit::TestCase
       assert response.ok?
       assert_equal 'Hello World', response.body
     end
+
+    it "delegates route(:#{verb}) correctly" do
+      delegation_app do
+        route verb.to_sym, '/hello' do
+          'Hello World'
+        end
+      end
+
+      request = Rack::MockRequest.new(@app)
+      response = request.request(verb.upcase, '/hello', {})
+      assert response.ok?
+      assert_equal 'Hello World', response.body
+    end
   end
 
   it "delegates head correctly" do

@@ -23,34 +23,164 @@ class RegexpLookAlike
 end
 
 class RoutingTest < Test::Unit::TestCase
-  %w[get put post delete options patch].each do |verb|
+  verbs = %w[get put post delete options patch]
+  verbs.each do |verb|
     it "defines #{verb.upcase} request handlers with #{verb}" do
-      mock_app {
+      mock_app do
         send verb, '/hello' do
           'Hello World'
         end
-      }
+      end
 
       request = Rack::MockRequest.new(@app)
       response = request.request(verb.upcase, '/hello', {})
       assert response.ok?
       assert_equal 'Hello World', response.body
     end
+
+    it "lets you define routes with routes(#{verb.upcase.inspect}, ...)" do
+      mock_app do
+        route verb.upcase, '/hello' do
+          'Hello World'
+        end
+      end
+
+      request = Rack::MockRequest.new(@app)
+      response = request.request(verb.upcase, '/hello', {})
+      assert response.ok?
+      assert_equal 'Hello World', response.body
+    end
+
+    it "lets you define routes with routes(:#{verb}, ...)" do
+      mock_app do
+        route verb.to_sym, '/hello' do
+          'Hello World'
+        end
+      end
+
+      request = Rack::MockRequest.new(@app)
+      response = request.request(verb.upcase, '/hello', {})
+      assert response.ok?
+      assert_equal 'Hello World', response.body
+    end
+
+    verbs.each do |other|
+      it "lets you define routes with routes(#{verb.upcase.inspect}, #{other.upcase.inspect}, ...)" do
+        mock_app do
+          route verb.upcase, other.upcase, '/hello' do
+            'Hello World'
+          end
+        end
+
+        request = Rack::MockRequest.new(@app)
+        response = request.request(verb.upcase, '/hello', {})
+        assert response.ok?
+        assert_equal 'Hello World', response.body
+      end
+
+      it "lets you define routes with routes(:#{other}, :#{verb}, ...)" do
+        mock_app do
+          route other.to_sym, verb.to_sym, '/hello' do
+            'Hello World'
+          end
+        end
+
+        request = Rack::MockRequest.new(@app)
+        response = request.request(verb.upcase, '/hello', {})
+        assert response.ok?
+        assert_equal 'Hello World', response.body
+      end
+    end
   end
 
-  it "defines HEAD request handlers with HEAD" do
-    mock_app {
+  it "defines HEAD request handlers with head" do
+    mock_app do
       head '/hello' do
         response['X-Hello'] = 'World!'
         'remove me'
       end
-    }
+    end
 
     request = Rack::MockRequest.new(@app)
     response = request.request('HEAD', '/hello', {})
     assert response.ok?
     assert_equal 'World!', response['X-Hello']
     assert_equal '', response.body
+  end
+
+  it "lets you define routes with routes('HEAD', ...)" do
+    mock_app do
+      route 'HEAD', '/hello' do
+        response['X-Hello'] = 'World!'
+        'remove me'
+      end
+    end
+
+    request = Rack::MockRequest.new(@app)
+    response = request.request('HEAD', '/hello', {})
+    assert response.ok?
+    assert_equal 'World!', response['X-Hello']
+    assert_equal '', response.body
+  end
+
+  it "lets you define routes with routes(:head, ...)" do
+    mock_app do
+      route :head, '/hello' do
+        response['X-Hello'] = 'World!'
+        'remove me'
+      end
+    end
+
+    request = Rack::MockRequest.new(@app)
+    response = request.request('HEAD', '/hello', {})
+    assert response.ok?
+    assert_equal 'World!', response['X-Hello']
+    assert_equal '', response.body
+  end
+
+  verbs.each do |other|
+    it "lets you define routes with routes('HEAD', #{other.upcase.inspect}, ...)" do
+      mock_app do
+        route 'HEAD', other.upcase, '/hello' do
+          response['X-Hello'] = 'World!'
+          'remove me'
+        end
+      end
+
+      request = Rack::MockRequest.new(@app)
+      response = request.request('HEAD', '/hello', {})
+      assert response.ok?
+      assert_equal 'World!', response['X-Hello']
+      assert_equal '', response.body
+    end
+
+    it "lets you define routes with routes(:#{other}, :head, ...)" do
+      mock_app do
+        route other.to_sym, :head, '/hello' do
+          response['X-Hello'] = 'World!'
+          'remove me'
+        end
+      end
+
+      request = Rack::MockRequest.new(@app)
+      response = request.request('HEAD', '/hello', {})
+      assert response.ok?
+      assert_equal 'World!', response['X-Hello']
+      assert_equal '', response.body
+    end
+  end
+
+  it "lets you define routes for custom verbs" do
+    mock_app do
+      route :foo, '/hello' do
+        'Hello World'
+      end
+    end
+
+    request = Rack::MockRequest.new(@app)
+    response = request.request("FOO", '/hello', {})
+    assert response.ok?
+    assert_equal 'Hello World', response.body
   end
 
   it "404s when no route satisfies the request" do

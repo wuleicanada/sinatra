@@ -1108,11 +1108,7 @@ module Sinatra
       # Defining a `GET` handler also automatically defines
       # a `HEAD` handler.
       def get(path, opts={}, &block)
-        conditions = @conditions.dup
-        route('GET', path, opts, &block)
-
-        @conditions = conditions
-        route('HEAD', path, opts, &block)
+        route('GET', 'HEAD', path, opts, &block)
       end
 
       def put(path, opts={}, &bk)     route 'PUT',     path, opts, &bk end
@@ -1122,19 +1118,24 @@ module Sinatra
       def options(path, opts={}, &bk) route 'OPTIONS', path, opts, &bk end
       def patch(path, opts={}, &bk)   route 'PATCH',   path, opts, &bk end
 
-    private
-      def route(verb, path, options={}, &block)
+      def route(*args, &block)
+        options = args.last.respond_to?(:to_hash) ? args.pop.to_hash : {}
+        path    = args.pop
+
         # Because of self.options.host
         host_name(options.delete(:host)) if options.key?(:host)
         enable :empty_path_info if path == "" and empty_path_info.nil?
 
-        block, pattern, keys, conditions = compile! verb, path, block, options
-        invoke_hook(:route_added, verb, path, block)
+        args.each do |verb|
+          verb = verb.to_s.upcase
+          block, pattern, keys, conditions = compile! verb, path, block, options
+          invoke_hook(:route_added, verb, path, block)
 
-        (@routes[verb] ||= []).
-          push([pattern, keys, conditions, block]).last
+          (@routes[verb] ||= []).push [pattern, keys, conditions, block]
+        end
       end
 
+    private
       def invoke_hook(name, *args)
         extensions.each { |e| e.send(name, *args) if e.respond_to?(name) }
       end
@@ -1498,7 +1499,7 @@ module Sinatra
     delegate :get, :patch, :put, :post, :delete, :head, :options, :template, :layout,
              :before, :after, :error, :not_found, :configure, :set, :mime_type,
              :enable, :disable, :use, :development?, :test?, :production?,
-             :helpers, :settings
+             :helpers, :settings, :route
 
     class << self
       attr_accessor :target

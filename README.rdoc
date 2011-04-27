@@ -196,6 +196,27 @@ Or, using negative look ahead:
     # ...
   end
 
+=== Custom or Multiple HTTP Verbs
+
+Sometimes you want to use custom HTTP verbs, not supported by Sinatra out of
+the box, for instance, if you want to implement a WebDAV server. Simply use
+the +route+ method, which has nearly the same signature as the other routing
+methods, except it also takes one or more HTTP verbs as first argument:
+
+  route :list, '/foo' do
+    "You just used the LIST verb, thanks!"
+  end
+
+  route :post, :get, '/foo' do
+    "I answer both POST and GET."
+  end
+
+Just like +get+ and friends, you can use conditions:
+
+  route :list, '/:dir', :agent => /MyClient/ do
+    Dir.glob(params[:dir]).join "\n"
+  end
+
 == Static Files
 
 Static files are served from the <tt>./public</tt> directory. You can specify

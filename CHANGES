@@ -2,6 +2,10 @@
 
  * Added support for HTTP PATCH requests. (Konstantin Haase)
 
+ * The route method is now part of the public API and also takes multiple
+   verbs as arguments, allowing you to define routes for multiple and/or
+   custom HTTP methods in one short statement. (Rick Olson, Konstantin Haase)
+
  * Support for Creole templates, Creole is a standardized wiki markup,
    supported by many wiki implementations. (Konstanin Haase)
 
