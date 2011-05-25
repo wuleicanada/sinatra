@@ -73,16 +73,28 @@ module Sinatra
   # more info:
   # http://rack.rubyforge.org/doc/classes/Rack/Response.html
   # http://rack.rubyforge.org/doc/classes/Rack/Response/Helpers.html
+  #
+  # @attr [#each] body
   class Response < Rack::Response
     def body=(value)
       value = value.body while value.respond_to? :body and value.body != value
       @body = value.respond_to?(:to_str) ? [value.to_str] : value
     end
 
+    # @overload each
+    #   Delegates #each to #body.
+    #   @yieldparam [String] chunk
+    #
+    # @overload each
+    #   @example
+    #     response.each.map(&:upcase)
+    #   @return [Enumerator, Enumerable::Enumerator]
     def each
       block_given? ? super : enum_for(:each)
     end
 
+    # Generates Rack return value from response.
+    # @return [Array<Integer, Hash, #each>]
     def finish
       if body.respond_to? :to_ary and not [204, 304].include?(status.to_i)
         headers["Content-Length"] = body.inject(0) { |l, p| l + Rack::Utils.bytesize(p) }.to_s
