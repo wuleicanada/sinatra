@@ -11,7 +11,8 @@ module Sinatra
   # The request object. See Rack::Request for more info:
   # http://rack.rubyforge.org/doc/classes/Rack/Request.html
   class Request < Rack::Request
-    # Returns an array of acceptable media types for the response
+    # Parsed accept header, weighted.
+    # @return [Array] List of acceptable media types for the response.
     def accept
       @env['sinatra.accept'] ||= begin
         entries = @env['HTTP_ACCEPT'].to_s.split(',')
@@ -19,6 +20,28 @@ module Sinatra
       end
     end
 
+    # @overload preferred_type(*types)
+    #   From a list of mime types, pick the one most wanted by the client.
+    #   @example
+    #     request.preferred_type 'text/plain', 'text/html' # => 'text/html'
+    #   @param [*String] types
+    #     list of mime types
+    #   @return [String] the type most wanted
+    #   @return [NilClass] nil if no type matches
+    #
+    # @overload preferred_type
+    #   The mime type most wanted by the request.
+    #   @example
+    #     request.preferred_type # => 'text/html'
+    #   @return [String] the type most wanted
+    #   @return [NilClass] nil if no type matches
+    #
+    # @overload accept?(type)
+    #   Whether or not a mime type is an acceptable response to a request.
+    #   @example
+    #     puts "yay" if request.accept? "text/html"
+    #   @param [String] type
+    #   @return [Boolean]
     def preferred_type(*types)
       return accept.first if types.empty?
       types.flatten!
@@ -31,6 +54,7 @@ module Sinatra
     alias accept? preferred_type
     alias secure? ssl?
 
+    # Whether the request has been forwarded by a reverse proxy.
     def forwarded?
       @env.include? "HTTP_X_FORWARDED_HOST"
     end
