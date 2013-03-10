@@ -30,11 +30,11 @@ pick up if available.
     * [Table of Contents](#table-of-contents)
     * [Routes](#routes)
     * [Conditions](#conditions)
-        * [Return Values](#return-values)
-        * [Custom Route Matchers](#custom-route-matchers)
-        * [Static Files](#static-files)
-        * [Views / Templates](#views--templates)
-            * [Literal Templates](#literal-templates)
+    * [Return Values](#return-values)
+    * [Custom Route Matchers](#custom-route-matchers)
+    * [Static Files](#static-files)
+    * [Views / Templates](#views--templates)
+        * [Literal Templates](#literal-templates)
         * [Available Template Languages](#available-template-languages)
             * [Haml Templates](#haml-templates)
             * [Erb Templates](#erb-templates)
@@ -284,7 +284,7 @@ get "/only/admin/", :auth => :admin do
 end
 ```
 
-### Return Values
+## Return Values
 
 The return value of a route block determines at least the response body passed
 on to the HTTP client, or at least the next middleware in the Rack stack.
@@ -317,7 +317,7 @@ get('/') { Stream.new }
 You can also use the `stream` helper method (described below) to reduce boiler
 plate and embed the streaming logic in the route.
 
-### Custom Route Matchers
+## Custom Route Matchers
 
 As shown above, Sinatra ships with built-in support for using String patterns
 and regular expressions as route matches. However, it does not stop there. You
@@ -364,7 +364,7 @@ get %r{^(?!/index$)} do
 end
 ```
 
-### Static Files
+## Static Files
 
 Static files are served from the `./public` directory. You can specify
 a different location by setting the `:public_folder` option:
@@ -380,7 +380,7 @@ Note that the public directory name is not included in the URL. A file
 Use the `:static_cache_control` setting (see below) to add
 `Cache-Control` header info.
 
-### Views / Templates
+## Views / Templates
 
 Each template language is exposed via its own rendering method. These
 methods simply return a string:
@@ -484,23 +484,18 @@ Available Options:
     Special options only used for rendering the layout. Example:
     <tt>set :rdoc, :layout_options => { :views => 'views/layouts' }</tt>
   </dd>
-
-  <dd>
-    Templates are assumed to be located directly under the `./views`
-    directory. To use a different views directory:
-  <tt>set :views, settings.root + '/templates'</tt>
-  </dd>
-
-  <dd>
-    One important thing to remember is that you always have to reference
-    templates with symbols, even if they're in a subdirectory (in this
-    case, use: <tt>'subdir/template'</tt>). You must use a symbol because
-    otherwise rendering methods will render any strings passed to them
-    directly.
-  </dd>
 </dl>
+    
+Templates are assumed to be located directly under the `./views` directory. To 
+use a different views directory: 
+<tt>set :views, settings.root + '/templates'</tt>
 
-#### Literal Templates
+One important thing to remember is that you always have to reference templates 
+with symbols, even if they're in a subdirectory (in this case, use:
+<tt>'subdir/template'</tt>). You must use a symbol because otherwise rendering
+methods will render any strings passed to them directly.
+
+### Literal Templates
 
 ``` ruby
 get '/' do
@@ -977,14 +972,15 @@ end
 
 
 The template source is evaluated as a Ruby string, and the
-resulting json variable is converted using `#to_json`.
+resulting json variable is converted using `#to_json`:
 
 ``` ruby
 json = { :foo => 'bar' }
 json[:baz] = key
 ```
 
-The `:callback` and `:variable` options can be used to decorate the rendered object.
+The `:callback` and `:variable` options can be used to decorate the rendered
+object:
 
 ``` ruby
 var resource = {"foo":"bar","baz":"qux"}; present(resource);
@@ -2013,7 +2009,7 @@ set :protection, :session => true
   </dd>
 
   <dt>bind</dt>
-  <dd>IP address to bind to (default: 0.0.0.0). Only used for built-in server.</dd>
+  <dd>IP address to bind to (default: <tt>0.0.0.0</tt>). Only used for built-in server.</dd>
 
   <dt>default_encoding</dt>
   <dd>encoding to assume if unknown (defaults to <tt>"utf-8"</tt>).</dd>
@@ -2093,8 +2089,8 @@ set :protection, :session => true
 
   <dt>server</dt>
   <dd>
-    server or list of servers to use for built-in server. defaults to
-    ['thin', 'mongrel', 'webrick'], order indicates priority.
+    Server or list of servers to use for built-in server. order indicates priority,
+    default depends on Ruby implementation.
   </dd>
 
   <dt>sessions</dt>
@@ -2150,7 +2146,7 @@ set :protection, :session => true
   <dt>x_cascade</dt>
   <dd>
     Whether or not to set the X-Cascade header if no route matches.
-    Defaults to `true`.
+    Defaults to <tt>true</tt>.
   </dd>
 </dl>
 
@@ -2658,8 +2654,8 @@ end
 
 You have the request scope binding inside:
 
-* get/head/post/put/delete/options blocks
-* before/after filters
+* get, head, post, put, delete, options, patch, link, and unlink blocks
+* before and after filters
 * helper methods
 * templates/views
 
@@ -2707,45 +2703,44 @@ The following Ruby versions are officially supported:
   <dt>Ruby 1.8.7</dt>
   <dd>
     1.8.7 is fully supported, however, if nothing is keeping you from it, we
-    recommend upgrading to 1.9.2 or switching to JRuby or Rubinius. Support for
-    1.8.7 will not be dropped before Sinatra 2.0 and Ruby 2.0 except maybe in
-    the unlikely event of 1.8.8 being released. Even then, we might continue
-    supporting it. <b>Ruby 1.8.6 is no longer supported.</b> If you want to run
-    with 1.8.6, downgrade to Sinatra 1.2, which will receive bug fixes until
-    Sinatra 1.4.0 is released.
+    recommend upgrading or switching to JRuby or Rubinius. Support for 1.8.7
+    will not be dropped before Sinatra 2.0. Ruby 1.8.6 is no longer supported.
   </dd>
 
   <dt>Ruby 1.9.2</dt>
   <dd>
-    1.9.2 is fully supported and recommended. Do not use 1.9.2p0, as it is known to
-    cause segmentation faults when running Sinatra. Support will continue at least
-    until the release of Ruby 1.9.4/2.0 and support for the latest 1.9 release
-    will continue as long as it is still supported by the Ruby core team.
+    1.9.2 is fully supported. Do not use 1.9.2p0, as it is known to cause
+    segmentation faults when running Sinatra. Official support will continue
+    at least until the release of Sinatra 1.5.
   </dd>
 
   <dt>Ruby 1.9.3</dt>
   <dd>
     1.9.3 is fully supported and recommended. Please note that switching to 1.9.3
-    from an earlier version will invalidate all sessions.
+    from an earlier version will invalidate all sessions. 1.9.3 will be supported
+    until the release of Sinatra 2.0.
+  </dd>
+
+  <dt>Ruby 2.0.0</dt>
+  <dd>
+    2.0.0 is fully supported and recommended. There are currently no plans to drop
+    official support for it.
   </dd>
 
   <dt>Rubinius</dt>
   <dd>
-    Rubinius is officially supported (Rubinius >= 1.2.4), everything works, including
-    all template languages. The upcoming 2.0 release is supported as
-    well, including 1.9 mode.
+    Rubinius is officially supported (Rubinius >= 2.x). It is recommendended to
+    `gem install puma`.
   </dd>
 
   <dt>JRuby</dt>
   <dd>
-    JRuby is officially supported (JRuby >= 1.6.7). No issues with third party
-    template libraries are known, however, if you choose to use JRuby, please
-    look into JRuby rack handlers, as the Thin web server is not fully supported
-    on JRuby. JRuby's support for C extensions is still experimental, which only
-    affects RDiscount, Redcarpet, RedCloth and Yajl templates as well as Thin
-    and Mongrel at the moment.
+    The latest stable release of JRuby is officially supported. It is not
+    recommended to use C extensions with JRuby. It is recommended to
+    `gem install trinidad`.
   </dd>
 </dl>
+
 We also keep an eye on upcoming Ruby versions.
 
 The following Ruby implementations are not officially supported but still are
@@ -2759,12 +2754,14 @@ known to run Sinatra:
 Not being officially supported means if things only break there and not on a
 supported platform, we assume it's not our issue but theirs.
 
-We also run our CI against ruby-head (the upcoming 2.0.0) and the 1.9.4
-branch, but we can't guarantee anything, since it is constantly moving. Expect
-both 1.9.4p0 and 2.0.0p0 to be supported.
+We also run our CI against ruby-head (the upcoming 2.1.0), but we can't
+guarantee anything, since it is constantly moving. Expect 2.1.0 to be fully
+supported.
 
 Sinatra should work on any operating system supported by the chosen Ruby
 implementation.
+
+If you run MacRuby, you should `gem install control_tower`.
 
 Sinatra currently doesn't run on Cardinal, SmallRuby, BlueRuby or any
 Ruby version prior to 1.8.7.
