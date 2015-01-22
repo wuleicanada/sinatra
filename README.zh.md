@@ -1,10 +1,10 @@
 # Sinatra
 
-*注：本文档仅仅是英文版的翻译，会出现内容没有及时更新的情况发生。
+*注：本文档是英文版的翻译，内容更新有可能不及时。
 如有不一致的地方，请以英文版为准。*
 
-Sinatra是一个基于Ruby语言，以最小精力为代价快速创建web应用为目的的[DSL](http://en.wikipedia.org/wiki/Domain-specific_language)（
-领域专属语言）：
+Sinatra是一个基于Ruby语言的[DSL](http://en.wikipedia.org/wiki/Domain-specific_language)
+（领域专属语言），可以轻松、快速的创建web应用。
 
 ~~~~ ruby
 # myapp.rb
@@ -15,7 +15,7 @@ get '/' do
 end
 ~~~~
 
-安装gem然后运行：
+安装gem，然后运行：
 
 ~~~~ shell
 gem install sinatra
@@ -24,12 +24,12 @@ ruby myapp.rb
 
 在该地址查看： [localhost:4567](http://localhost:4567)
 
-推荐同时运行`gem install thin`，Sinatra会优先选择thin作为服务器。
+安装Sintra后，最好再运行`gem install thin`安装Thin。这样，Sinatra会优先选择Thin作为服务器。
 
 ## 路由
 
-在Sinatra中，一个路由是一个HTTP方法与URL匹配范式的配对。
-每个路由都与一个代码块关联：
+在Sinatra中，一个路由分为两部分：HTTP方法(GET, POST等)和URL匹配范式。
+每个路由都有一个要执行的代码块：
 
 ~~~~ ruby
 get '/' do
