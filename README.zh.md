@@ -215,7 +215,7 @@ get // do
 end
 ~~~~
 
-或者，使用消极向前查找:
+或者，使用正向否定预查:
 
 ~~~~ ruby
 get %r{^(?!/index$)} do
@@ -225,35 +225,34 @@ end
 
 ## 静态文件
 
-静态文件是从 `./public_folder` 目录提供服务。你可以通过设置`:public`
-选项设定一个不同的位置：
+静态文件存放在 `./public_folder` 目录。通过设置`:public`
+选项，你可以指定一个别的的位置：
 
 ~~~~ ruby
 set :public_folder, File.dirname(__FILE__) + '/static'
 ~~~~
 
-请注意public目录名并没有被包含在URL之中。文件
-`./public/css/style.css`是通过
-`http://example.com/css/style.css`地址访问的。
+请注意：在URL中，public被省略了。比如，文件
+`./public/css/style.css`对应的URL是
+`http://example.com/css/style.css`。
 
 ## 视图 / 模板
 
-模板被假定直接位于`./views`目录。 要使用不同的视图目录：
+模板默认位于`./views`目录。 要使用不同的目录：
 
 ~~~~ ruby
 set :views, File.dirname(__FILE__) + '/templates'
 ~~~~
 
-请记住一件非常重要的事情，你只可以通过符号引用模板， 即使它们在子目录下
-（在这种情况下，使用 `:'subdir/template'`）。 你必须使用一个符号，
-因为渲染方法会直接地渲染任何传入的字符串。
+切记：你只能通过符号引用模板。 （如果模板在子目录下，要用 `:'subdir/template'`）。 如果你使用
+字符串的话，字符串会当作内容直接显示出来。
 
 ### Haml模板
 
-需要引入 `haml` gem/library以渲染 HAML 模板：
+需要引入 `haml` gem/library以填充 HAML 模板：
 
 ~~~~ ruby
-# 你需要在你的应用中引入 haml
+# 你在程序中引入 haml
 require 'haml'
 
 get '/' do
@@ -261,7 +260,7 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.haml`。
+填充 `./views/index.haml`。
 
 [Haml的选项](http://haml.info/docs/yardoc/file.HAML_REFERENCE.html#options)
 可以通过Sinatra的配置全局设定， 参见
@@ -272,14 +271,14 @@ end
 set :haml, {:format => :html5 } # 默认的Haml输出格式是 :xhtml
 
 get '/' do
-  haml :index, :haml_options => {:format => :html4 } # 被覆盖，变成:html4
+  haml :index, :haml_options => {:format => :html4 } # 输出格式变为html4
 end
 ~~~~
 
 ### Erb模板
 
 ~~~~ ruby
-# 你需要在你的应用中引入 erb
+# 你在程序中引入 erb
 require 'erb'
 
 get '/' do
@@ -287,14 +286,14 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.erb`
+填充 `./views/index.erb`
 
 ### Erubis
 
-需要引入 `erubis` gem/library以渲染 erubis 模板：
+需要引入 `erubis` gem/library以填充 erubis 模板：
 
 ~~~~ ruby
-# 你需要在你的应用中引入 erubis
+# 你在程序中引入 erubis
 require 'erubis'
 
 get '/' do
@@ -302,7 +301,7 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.erubis`
+填充 `./views/index.erubis`
 
 使用Erubis代替Erb也是可能的:
 
@@ -315,14 +314,14 @@ get '/' do
 end
 ~~~~
 
-使用Erubis来渲染 `./views/index.erb`。
+使用Erubis来填充 `./views/index.erb`。
 
 ### Builder 模板
 
-需要引入 `builder` gem/library 以渲染 builder templates：
+需要引入 `builder` gem/library 以填充 builder templates：
 
 ~~~~ ruby
-# 需要在你的应用中引入builder
+# 在程序中引入builder
 require 'builder'
 
 get '/' do
@@ -330,14 +329,14 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.builder`。
+填充 `./views/index.builder`。
 
 ### Nokogiri 模板
 
-需要引入 `nokogiri` gem/library 以渲染 nokogiri 模板：
+需要引入 `nokogiri` gem/library 以填充 nokogiri 模板：
 
 ~~~~ ruby
-# 需要在你的应用中引入 nokogiri
+# 在程序中引入 nokogiri
 require 'nokogiri'
 
 get '/' do
@@ -345,14 +344,14 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.nokogiri`。
+填充 `./views/index.nokogiri`。
 
 ### Sass 模板
 
-需要引入 `haml` 或者 `sass` gem/library 以渲染 Sass 模板：
+需要引入 `haml` 或者 `sass` gem/library 以填充 Sass 模板：
 
 ~~~~ ruby
-# 需要在你的应用中引入 haml 或者 sass
+# 在程序中引入 haml 或者 sass
 require 'sass'
 
 get '/stylesheet.css' do
@@ -360,7 +359,7 @@ get '/stylesheet.css' do
 end
 ~~~~
 
-渲染 `./views/stylesheet.sass`。
+填充 `./views/stylesheet.sass`。
 
 [Sass
 的选项](http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#options)
@@ -378,10 +377,10 @@ end
 
 ### Scss 模板
 
-需要引入 `haml` 或者 `sass` gem/library 来渲染 Scss templates：
+需要引入 `haml` 或者 `sass` gem/library 来填充 Scss templates：
 
 ~~~~ ruby
-# 需要在你的应用中引入 haml 或者 sass
+# 在程序中引入 haml 或者 sass
 require 'sass'
 
 get '/stylesheet.css' do
@@ -389,7 +388,7 @@ get '/stylesheet.css' do
 end
 ~~~~
 
-渲染 `./views/stylesheet.scss`。
+填充 `./views/stylesheet.scss`。
 
 [Scss的选项](http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#options)
 可以通过Sinatra选项全局设定， 参考
@@ -406,10 +405,10 @@ end
 
 ### Less 模板
 
-需要引入 `less` gem/library 以渲染 Less 模板：
+需要引入 `less` gem/library 以填充 Less 模板：
 
 ~~~~ ruby
-# 需要在你的应用中引入 less
+# 在程序中引入 less
 require 'less'
 
 get '/stylesheet.css' do
@@ -417,14 +416,14 @@ get '/stylesheet.css' do
 end
 ~~~~
 
-渲染 `./views/stylesheet.less`。
+填充 `./views/stylesheet.less`。
 
 ### Liquid 模板
 
-需要引入 `liquid` gem/library 来渲染 Liquid 模板：
+需要引入 `liquid` gem/library 来填充 Liquid 模板：
 
 ~~~~ ruby
-# 需要在你的应用中引入 liquid
+# 在程序中引入 liquid
 require 'liquid'
 
 get '/' do
@@ -432,7 +431,7 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.liquid`。
+填充 `./views/index.liquid`。
 
 因为你不能在Liquid 模板中调用 Ruby 方法 (除了 `yield`) ，
 你几乎总是需要传递locals给它：
@@ -443,10 +442,10 @@ liquid :index, :locals => { :key => 'value' }
 
 ### Markdown 模板
 
-需要引入 `rdiscount` gem/library 以渲染 Markdown 模板：
+需要引入 `rdiscount` gem/library 以填充 Markdown 模板：
 
 ~~~~ ruby
-# 需要在你的应用中引入rdiscount
+# 在程序中引入rdiscount
 require "rdiscount"
 
 get '/' do
@@ -454,10 +453,10 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.markdown` (`md` 和 `mkd` 也是合理的文件扩展名)。
+填充 `./views/index.markdown` (`md` 和 `mkd` 也是合理的文件扩展名)。
 
 在markdown中是不可以调用方法的，也不可以传递 locals给它。
-你因此一般会结合其他的渲染引擎来使用它：
+你因此一般会结合其他的填充引擎来使用它：
 
 ~~~~ ruby
 erb :overview, :locals => { :text => markdown(:introduction) }
@@ -471,7 +470,7 @@ erb :overview, :locals => { :text => markdown(:introduction) }
 ~~~~
 
 既然你不能在Markdown中调用Ruby，你不能使用Markdown编写的布局。
-不过，使用其他渲染引擎作为模版的布局是可能的，
+不过，使用其他填充引擎作为模版的布局是可能的，
 通过传递`:layout_engine`选项:
 
 ~~~~ ruby
@@ -480,7 +479,7 @@ get '/' do
 end
 ~~~~
 
-这将会渲染 `./views/index.md` 并使用 `./views/layout.erb` 作为布局。
+这将会填充 `./views/index.md` 并使用 `./views/layout.erb` 作为布局。
 
 请记住你可以全局设定这个选项:
 
@@ -492,7 +491,7 @@ get '/' do
 end
 ~~~~
 
-这将会渲染 `./views/index.markdown` (和任何其他的 Markdown 模版) 并使用
+这将会填充 `./views/index.markdown` (和任何其他的 Markdown 模版) 并使用
 `./views/post.haml` 作为布局.
 
 也可能使用BlueCloth而不是RDiscount来解析Markdown文件:
@@ -509,11 +508,11 @@ get '/' do
 end
 ~~~~
 
-使用BlueCloth来渲染 `./views/index.md` 。
+使用BlueCloth来填充 `./views/index.md` 。
 
 ### Textile 模板
 
-需要引入 `RedCloth` gem/library 以渲染 Textile 模板：
+需要引入 `RedCloth` gem/library 以填充 Textile 模板：
 
 ~~~~ ruby
 # 在你的应用中引入redcloth
@@ -524,10 +523,10 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.textile`。
+填充 `./views/index.textile`。
 
 在textile中是不可以调用方法的，也不可以传递 locals给它。
-你因此一般会结合其他的渲染引擎来使用它：
+你因此一般会结合其他的填充引擎来使用它：
 
 ~~~~ ruby
 erb :overview, :locals => { :text => textile(:introduction) }
@@ -541,7 +540,7 @@ erb :overview, :locals => { :text => textile(:introduction) }
 ~~~~
 
 既然你不能在Textile中调用Ruby，你不能使用Textile编写的布局。
-不过，使用其他渲染引擎作为模版的布局是可能的，
+不过，使用其他填充引擎作为模版的布局是可能的，
 通过传递`:layout_engine`选项:
 
 ~~~~ ruby
@@ -550,7 +549,7 @@ get '/' do
 end
 ~~~~
 
-这将会渲染 `./views/index.textile` 并使用 `./views/layout.erb`
+这将会填充 `./views/index.textile` 并使用 `./views/layout.erb`
 作为布局。
 
 请记住你可以全局设定这个选项:
@@ -563,15 +562,15 @@ get '/' do
 end
 ~~~~
 
-这将会渲染 `./views/index.textile` (和任何其他的 Textile 模版) 并使用
+这将会填充 `./views/index.textile` (和任何其他的 Textile 模版) 并使用
 `./views/post.haml` 作为布局.
 
 ### RDoc 模板
 
-需要引入 `RDoc` gem/library 以渲染RDoc模板：
+需要引入 `RDoc` gem/library 以填充RDoc模板：
 
 ~~~~ ruby
-# 需要在你的应用中引入rdoc/markup/to_html
+# 在程序中引入rdoc/markup/to_html
 require "rdoc"
 require "rdoc/markup/to_html"
 
@@ -580,10 +579,10 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.rdoc`。
+填充 `./views/index.rdoc`。
 
 在rdoc中是不可以调用方法的，也不可以传递locals给它。
-你因此一般会结合其他的渲染引擎来使用它：
+你因此一般会结合其他的填充引擎来使用它：
 
 ~~~~ ruby
 erb :overview, :locals => { :text => rdoc(:introduction) }
@@ -597,7 +596,7 @@ erb :overview, :locals => { :text => rdoc(:introduction) }
 ~~~~
 
 既然你不能在RDoc中调用Ruby，你不能使用RDoc编写的布局。
-不过，使用其他渲染引擎作为模版的布局是可能的，
+不过，使用其他填充引擎作为模版的布局是可能的，
 通过传递`:layout_engine`选项:
 
 ~~~~ ruby
@@ -606,7 +605,7 @@ get '/' do
 end
 ~~~~
 
-这将会渲染 `./views/index.rdoc` 并使用 `./views/layout.erb` 作为布局。
+这将会填充 `./views/index.rdoc` 并使用 `./views/layout.erb` 作为布局。
 
 请记住你可以全局设定这个选项:
 
@@ -618,15 +617,15 @@ get '/' do
 end
 ~~~~
 
-这将会渲染 `./views/index.rdoc` (和任何其他的 RDoc 模版) 并使用
+这将会填充 `./views/index.rdoc` (和任何其他的 RDoc 模版) 并使用
 `./views/post.haml` 作为布局.
 
 ### Radius 模板
 
-需要引入 `radius` gem/library 以渲染 Radius 模板：
+需要引入 `radius` gem/library 以填充 Radius 模板：
 
 ~~~~ ruby
-# 需要在你的应用中引入radius
+# 在程序中引入radius
 require 'radius'
 
 get '/' do
@@ -634,7 +633,7 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.radius`。
+填充 `./views/index.radius`。
 
 因为你不能在Radius 模板中调用 Ruby 方法 (除了 `yield`) ，
 你几乎总是需要传递locals给它：
@@ -645,10 +644,10 @@ radius :index, :locals => { :key => 'value' }
 
 ### Markaby 模板
 
-需要引入`markaby` gem/library以渲染Markaby模板：
+需要引入`markaby` gem/library以填充Markaby模板：
 
 ~~~~ ruby
-#需要在你的应用中引入 markaby
+#在程序中引入 markaby
 require 'markaby'
 
 get '/' do
@@ -656,7 +655,7 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.mab`。
+填充 `./views/index.mab`。
 
 你也可以使用嵌入的 Markaby:
 
@@ -668,10 +667,10 @@ end
 
 ### Slim 模板
 
-需要引入 `slim` gem/library 来渲染 Slim 模板：
+需要引入 `slim` gem/library 来填充 Slim 模板：
 
 ~~~~ ruby
-# 需要在你的应用中引入 slim
+# 在程序中引入 slim
 require 'slim'
 
 get '/' do
@@ -679,14 +678,14 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.slim`。
+填充 `./views/index.slim`。
 
 ### Creole 模板
 
-需要引入 `creole` gem/library 来渲染 Creole 模板：
+需要引入 `creole` gem/library 来填充 Creole 模板：
 
 ~~~~ ruby
-# 需要在你的应用中引入 creole
+# 在程序中引入 creole
 require 'creole'
 
 get '/' do
@@ -694,7 +693,7 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.creole`。
+填充 `./views/index.creole`。
 
 ### CoffeeScript 模板
 
@@ -711,10 +710,10 @@ end
 [github.com/josh/ruby-coffee-script](http://github.com/josh/ruby-coffee-script)
 获取更新的选项。
 
-现在你可以渲染 CoffeeScript 模版了:
+现在你可以填充 CoffeeScript 模版了:
 
 ~~~~ ruby
-# 需要在你的应用中引入coffee-script
+# 在程序中引入coffee-script
 require 'coffee-script'
 
 get '/application.js' do
@@ -722,7 +721,7 @@ get '/application.js' do
 end
 ~~~~
 
-渲染 `./views/application.coffee`。
+填充 `./views/application.coffee`。
 
 ### 嵌入模板字符串
 
@@ -732,7 +731,7 @@ get '/' do
 end
 ~~~~
 
-渲染嵌入模板字符串。
+填充嵌入模板字符串。
 
 ### 在模板中访问变量
 
@@ -755,7 +754,7 @@ get '/:id' do
 end
 ~~~~
 
-典型的使用情况是在别的模板中按照局部模板的方式来渲染。
+典型的使用情况是在别的模板中按照局部模板的方式来填充。
 
 ### 内联模板
 
@@ -800,7 +799,7 @@ get '/' do
 end
 ~~~~
 
-如果存在名为“layout”的模板，该模板会在每个模板渲染的时候被使用。
+如果存在名为“layout”的模板，该模板会在每个模板填充的时候被使用。
 你可以单独地通过传送 `:layout => false`来禁用，
 或者通过`set :haml, :layout => false`来禁用他们。
 
@@ -822,7 +821,7 @@ Tilt.register :tt, Tilt[:textile]
 
 ### 添加你自己的模版引擎
 
-首先，通过Tilt注册你自己的引擎，然后创建一个渲染方法:
+首先，通过Tilt注册你自己的引擎，然后创建一个填充方法:
 
 ~~~~ ruby
 Tilt.register :myat, MyAwesomeTemplateEngine
@@ -836,7 +835,7 @@ get '/' do
 end
 ~~~~
 
-渲染 `./views/index.myat`。察看
+填充 `./views/index.myat`。察看
 [github.com/rtomayko/tilt](https://github.com/rtomayko/tilt)
 来更多了解Tilt.
 
@@ -976,7 +975,7 @@ halt 401, 'go away!'
 halt 402, {'Content-Type' => 'text/plain'}, 'revenge'
 ~~~~
 
-### 让路
+### 跳过
 
 一个路由可以放弃处理，将处理让给下一个匹配的路由，使用 `pass`：
 
@@ -996,8 +995,7 @@ end
 
 ### 触发另一个路由
 
-有些时候，`pass` 并不是你想要的，你希望得到的是另一个路由的结果
-。简单的使用 `call` 可以做到这一点:
+如果你想要的不是`pass`，而是另一个路由的结果。这时候，可以使用 `call`:
 
 ~~~~ ruby
 get '/foo' do
@@ -1010,7 +1008,7 @@ get '/bar' do
 end
 ~~~~
 
-请注意在以上例子中，你可以更加简化测试并增加性能，只要简单的移动
+请注意：在以上例子中，你可以更加简化测试并增加性能，只要简单的移动
 
     <tt>"bar"</tt>到一个被<tt>/foo</tt>
 
@@ -1019,7 +1017,7 @@ end
 如果你希望请求被发送到同一个应用，而不是副本， 使用 `call!` 而不是
 `call`.
 
-察看 Rack specification 如果你想更多了解 `call`.
+如果你想更多了解 `call`，　请察看 Rack specification.
 
 ### 设定 消息体，状态码和消息头
 
@@ -1323,7 +1321,7 @@ end
 
 ### 查找模板文件
 
-`find_template` 辅助方法被用于在渲染时查找模板文件:
+`find_template` 辅助方法被用于在填充时查找模板文件:
 
 ~~~~ ruby
 find_template settings.views, 'foo', Tilt[:haml] do |file|
@@ -1924,7 +1922,7 @@ end
 
 对于每个进入的请求，一个新的应用类的实例会被创建
 所有的处理器代码块在该变量域被运行。在这个变量域中， 你可以访问
-\`request\` 和 \`session\` 对象，或者调用渲染方法比如 \`erb\` 或者
+\`request\` 和 \`session\` 对象，或者调用填充方法比如 \`erb\` 或者
 \`haml\`。你可以在请求变量域当中通过\`settings\`辅助方法
 访问应用变量域：
 
